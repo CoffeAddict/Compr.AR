@@ -12,9 +12,13 @@
         {{ product.nombre }}
       </li>
     </ul>
-    <StreamQrcodeBarcodeReader
-      @result="onResult"
-    />
+    <div ref="refCameraContainer">
+      <StreamQrcodeBarcodeReader
+        ref="refCamera"
+        :show-on-stream="true"
+        @result="onResult"
+      />
+    </div>
     <!-- <StreamQrcodeBarcodeReader
       capture="shoot"
       @loaded="onLoaded"
@@ -27,7 +31,6 @@
 <script>
 import { ref } from 'vue'
 import { StreamQrcodeBarcodeReader } from 'vue3-barcode-qrcode-reader'
-
 
 const API_URL = import.meta.env.VITE_APP_API_URL
 
@@ -47,11 +50,11 @@ export default {
       lng: null
     })
 
-    const formSubmit = async () => {
-      alert('flag-1')
-      await checkGPSPos()
+    const refCamera = ref(null)
+    const refCameraContainer = ref(null)
 
-      alert('flag-2')
+    const formSubmit = async () => {
+      await checkGPSPos()
 
       const query = new URLSearchParams()
       query.append('id_producto', formData.value.search)
@@ -63,10 +66,9 @@ export default {
         .then(resp => resp.json())
         .then(data => {
           productList.value = [data.producto]
-          alert(JSON.stringify(data))
         })
         .catch(error => {
-          alert(error, API_URL)
+          alert(error)
         })
     }
 
@@ -91,12 +93,19 @@ export default {
       })
     }
 
-    const onResult = (data) => {
-      console.log('result:', data)
-      formData.value.search = data
+    const toggleScanner = () => {
+      refCamera.value?.onCanPlay()
+      console.log(refCameraContainer.value.requestFullscreen())
     }
 
-    return { productList, formData, formSubmit, onResult }
+    const onResult = (data) => {
+      if (!data) return
+      formData.value.search = data
+      refCamera.value?.onCanStop()
+      document.exitFullscreen()
+    }
+
+    return { productList, formData, formSubmit, onResult, refCamera, refCameraContainer, toggleScanner }
   }
 }
 </script>
