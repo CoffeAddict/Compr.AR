@@ -65,6 +65,9 @@ export default {
           productList.value = [data.producto]
           alert(JSON.stringify(data))
         })
+        .catch(error => {
+          alert(error)
+        })
     }
 
     const checkGPSPos = () => {
