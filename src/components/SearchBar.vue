@@ -66,7 +66,7 @@ export default {
           alert(JSON.stringify(data))
         })
         .catch(error => {
-          alert(error)
+          alert(error, API_URL)
         })
     }
 
