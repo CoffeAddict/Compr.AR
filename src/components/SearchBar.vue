@@ -48,7 +48,10 @@ export default {
     })
 
     const formSubmit = async () => {
+      alert('flag-1')
       await checkGPSPos()
+
+      alert('flag-2')
 
       const query = new URLSearchParams()
       query.append('id_producto', formData.value.search)
@@ -60,6 +63,7 @@ export default {
         .then(resp => resp.json())
         .then(data => {
           productList.value = [data.producto]
+          alert(JSON.stringify(data))
         })
     }
 
