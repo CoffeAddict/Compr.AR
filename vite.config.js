@@ -11,12 +11,5 @@ export default defineConfig({
       key: fs.readFileSync(path.resolve(__dirname, 'localhost.key')),
       cert: fs.readFileSync(path.resolve(__dirname, 'localhost.crt')),
     },
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        // additionalData: `@import "@/styles/variables.scss";`, // Example: Import global variables
-      },
-    },
-  },
+  }
 })

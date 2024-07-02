@@ -12,22 +12,28 @@
         {{ product.nombre }}
       </li>
     </ul>
-    <!-- <StreamBarcodeReader @decode="onDecode" @loaded="onLoaded"/> -->
-    <StreamBarcodeReader @decode="onDecode" v-if="enableScanner"/>
+    <StreamQrcodeBarcodeReader
+      @result="onResult"
+    />
+    <!-- <StreamQrcodeBarcodeReader
+      capture="shoot"
+      @loaded="onLoaded"
+      @onloading="onLoading"
+      @result="onResult"
+    /> -->
   </div>
 </template>
 
 <script>
 import { ref } from 'vue'
-import { StreamBarcodeReader } from 'vue-barcode-reader'
+import { StreamQrcodeBarcodeReader } from 'vue3-barcode-qrcode-reader'
+
 
 const API_URL = import.meta.env.VITE_APP_API_URL
 
-console.log('API_URL',API_URL);
-
 export default {
   components: {
-    StreamBarcodeReader
+    StreamQrcodeBarcodeReader
   },
   setup () {
     const productList = ref([])
@@ -40,10 +46,6 @@ export default {
       lat: null,
       lng: null
     })
-
-    const enableScanner = ref(false)
-
-    const toggleScanner = () => { alert(navigator); enableScanner.value = true }
 
     const formSubmit = async () => {
       await checkGPSPos()
@@ -66,7 +68,6 @@ export default {
         const successFunction = (position) => {
           gpsPos.value.lat = position.coords.latitude
           gpsPos.value.lng = position.coords.longitude
-
           resolve()
         }
 
@@ -83,12 +84,12 @@ export default {
       })
     }
 
-    const onDecode = (result) => {
-      alert(result)
-      formData.value.search = result
+    const onResult = (data) => {
+      console.log('result:', data)
+      formData.value.search = data
     }
 
-    return { productList, formData, formSubmit, onDecode, enableScanner, toggleScanner }
+    return { productList, formData, formSubmit, onResult }
   }
 }
 </script>
