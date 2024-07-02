@@ -5,6 +5,7 @@ node_modules
 
 # local env files
 .env.local
+.env.development
 .env.*.local
 
 # Log files
@@ -21,3 +22,9 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+
+# SSH
+*.csr
+*.key
+*.crt
