@@ -16,15 +16,11 @@
       <StreamQrcodeBarcodeReader
         ref="refCamera"
         :show-on-stream="true"
+        capture="shoot"
+        @loaded="activateFullscreen"
         @result="onResult"
       />
     </div>
-    <!-- <StreamQrcodeBarcodeReader
-      capture="shoot"
-      @loaded="onLoaded"
-      @onloading="onLoading"
-      @result="onResult"
-    /> -->
   </div>
 </template>
 
@@ -95,7 +91,14 @@ export default {
 
     const toggleScanner = () => {
       refCamera.value?.onCanPlay()
-      console.log(refCameraContainer.value.requestFullscreen())
+    }
+
+    let flag = 0
+
+    const activateFullscreen = () => {
+      refCameraContainer.value.requestFullscreen()
+      // if (flag < 2) refCamera.value?.onChangeFacemode()
+      // flag++
     }
 
     const onResult = (data) => {
@@ -105,7 +108,7 @@ export default {
       document.exitFullscreen()
     }
 
-    return { productList, formData, formSubmit, onResult, refCamera, refCameraContainer, toggleScanner }
+    return { productList, formData, formSubmit, onResult, refCamera, refCameraContainer, toggleScanner, activateFullscreen }
   }
 }
 </script>
