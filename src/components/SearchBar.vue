@@ -113,7 +113,7 @@ export default {
     const startDecoding = () => {
       codeReader.value.decodeFromVideoDevice(videoOptionId.value, 'video', (result, err) => {
         if (result) {
-          formData.value.search = result
+          formData.value.search = result.toString().padStart(13,'0')
           codeReader.value.reset()
         }
         if (err && !(err instanceof ZXing.NotFoundException)) {
