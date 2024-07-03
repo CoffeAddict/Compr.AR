@@ -13,27 +13,18 @@
       </li>
     </ul>
     <div ref="refCameraContainer">
-      <StreamQrcodeBarcodeReader
-        ref="refCamera"
-        :show-on-stream="true"
-        capture="shoot"
-        @loaded="activateFullscreen"
-        @result="onResult"
-      />
+      <video ref="refCameraResult" id="video"></video>
     </div>
   </div>
 </template>
 
 <script>
 import { ref } from 'vue'
-import { StreamQrcodeBarcodeReader } from 'vue3-barcode-qrcode-reader'
+import * as ZXing from '@zxing/library'
 
 const API_URL = import.meta.env.VITE_APP_API_URL
 
 export default {
-  components: {
-    StreamQrcodeBarcodeReader
-  },
   setup () {
     const productList = ref([])
 
@@ -45,9 +36,6 @@ export default {
       lat: null,
       lng: null
     })
-
-    const refCamera = ref(null)
-    const refCameraContainer = ref(null)
 
     const formSubmit = async () => {
       await checkGPSPos()
@@ -89,26 +77,54 @@ export default {
       })
     }
 
-    const toggleScanner = () => {
-      refCamera.value?.onCanPlay()
-    }
-
-    let flag = 0
-
-    const activateFullscreen = () => {
-      refCameraContainer.value.requestFullscreen()
-      // if (flag < 2) refCamera.value?.onChangeFacemode()
-      // flag++
+    const activateFullscreen = (el) => {
+      el.requestFullscreen()
     }
 
     const onResult = (data) => {
       if (!data) return
-      formData.value.search = data
-      refCamera.value?.onCanStop()
+      console.log(data)
       document.exitFullscreen()
     }
 
-    return { productList, formData, formSubmit, onResult, refCamera, refCameraContainer, toggleScanner, activateFullscreen }
+    const codeReader = ref(null)
+    const videoOptionId = ref(null)
+    const refCameraResult = ref(null)
+
+    const toggleScanner = () => {
+      codeReader.value = new ZXing.BrowserMultiFormatReader()
+      console.log('ZXing code reader initialized')
+
+      codeReader.value.listVideoInputDevices()
+        .then(videoInputDevices => {
+          console.log(videoInputDevices)
+          if (videoInputDevices.length == 0) return
+
+          const videoInput = videoInputDevices.find(input => input.label.includes('back')) || videoInputDevices[0]
+
+          videoOptionId.value = videoInput.deviceId
+
+          console.log(refCameraResult.value);
+
+          startDecoding();
+        })
+    }
+
+    const startDecoding = () => {
+      codeReader.value.decodeFromVideoDevice(videoOptionId.value, 'video', (result, err) => {
+        if (result) {
+          formData.value.search = result
+          codeReader.value.reset()
+        }
+        if (err && !(err instanceof ZXing.NotFoundException)) {
+          console.error(err)
+        }
+      })
+
+      console.log(`Started continous decode from camera on element => ${videoOptionId.value}`)
+    }
+
+    return { productList, formData, formSubmit, onResult, toggleScanner, activateFullscreen }
   }
 }
 </script>
