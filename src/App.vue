@@ -32,11 +32,15 @@
 
 <script>
 import SearchBar from './components/SearchBar.vue'
+import searchService from './services/searchService'
 
 export default {
   name: 'App',
   components: {
     SearchBar
+  },
+  setup () {
+    searchService.getProductByName('tomate')
   }
 }
 </script>
