@@ -39,8 +39,9 @@ export default {
   components: {
     SearchBar
   },
-  setup () {
-    searchService.getProductByName('tomate')
+  async mounted () {
+    const product = await searchService.getProductByName('tomate')
+    console.log(product)
   }
 }
 </script>

@@ -8,11 +8,7 @@ const searchService = {
         params.append('limit', 50)
         params.append('sort', '-cant_sucursales_disponible')
 
-        APIService.getData('/prod/productos', params)
-            .then(resp => console.log(resp))
-            .catch(resp => console.log(resp))
-
-        if (callback && typeof callback === 'function') callback(result)
+        return APIService.getData('/prod/productos', params)
     }
 }
 
