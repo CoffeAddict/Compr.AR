@@ -42,18 +42,17 @@ export default {
 
       const query = new URLSearchParams()
       query.append('id_producto', formData.value.search)
-      query.append('limit', 10)
       query.append('lat', gpsPos.value.lat)
       query.append('lng', gpsPos.value.lng)
 
-      fetch(API_URL + `/prod/producto?${query}`)
-        .then(resp => resp.json())
-        .then(data => {
-          productList.value = [data.producto]
-        })
-        .catch(error => {
-          alert(error)
-        })
+      // fetch(API_URL + `/prod/producto?${query}`)
+      //   .then(resp => resp.json())
+      //   .then(data => {
+      //     productList.value = [data.producto]
+      //   })
+      //   .catch(error => {
+      //     alert(error)
+      //   })
     }
 
     const checkGPSPos = () => {

@@ -2,10 +2,10 @@
   <SearchBar/>
   <h2>Pruebas</h2>
   <section>
-    <h3>Buscar producto por nombre - pendiente</h3>
+    <h3>Buscar producto por nombre - Service Ready</h3>
   </section>
   <section>
-    <h3>Buscar producto por codigo de barras - pendiente</h3>
+    <h3>Buscar producto por codigo de barras - Service Ready</h3>
   </section>
   <section>
     <h3>Leer codigo de barras - pendiente</h3>
@@ -40,8 +40,9 @@ export default {
     SearchBar
   },
   async mounted () {
-    const product = await searchService.getProductByName('tomate')
-    console.log(product)
+    // console.log(await searchService.getProductByCode(7799155000173))
+    // console.log(await searchService.getProductByName('celusal'))
+
   }
 }
 </script>

@@ -1,4 +1,5 @@
 import GPSService from "./gpsService"
+import responseHandler from "./responseHandler"
 
 const API_URL = import.meta.env.VITE_APP_API_URL
 
@@ -9,16 +10,10 @@ const APIService = {
 
         try {
             const position = await GPSService.getPosition()
-            params = new URLSearchParams({ ...params, lat: position.lat, lng: position.lng })
+            params.append('lat', position.lat)
+            params.append('lng', position.lng)
 
-            const response = await fetch(`${API_URL}${endpoint}?${params}`)
-            // const data = responseHandler(await fetch(`${API_URL}${endpoint}?${params}`))
-
-            if (!response.ok) {
-                throw new Error(`APIService: Request failed with status ${response.status}`)
-            }
-
-            const data = await response.json()
+            const data = responseHandler(await fetch(`${API_URL}${endpoint}?${params}`))
 
             if (callback && typeof callback === 'function') callback(data)
 
