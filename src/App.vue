@@ -9,6 +9,7 @@
   </section>
   <section>
     <h3>Leer codigo de barras - pendiente</h3>
+    <BarcodeButton/>
   </section>
   <section>
     <h3>Listar productos de manera local - pendiente</h3>
@@ -32,12 +33,14 @@
 
 <script>
 import SearchBar from './components/SearchBar.vue'
+import BarcodeButton from './components/BarcodeButton.vue'
 import searchService from './services/searchService'
 
 export default {
   name: 'App',
   components: {
-    SearchBar
+    SearchBar,
+    BarcodeButton
   },
   async mounted () {
     // console.log(await searchService.getProductByCode(7799155000173))
