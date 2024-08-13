@@ -1,7 +1,7 @@
 <template>
     <button class="button-xs" type="button" @click="toggleScanner">Read Code</button>
-    <div ref="refCameraContainer">
-        <video ref="refCameraResult" id="video"></video>
+    <div ref="refCameraContainer" id="video-stream-container">
+        <video id="video" autoplay class="fullscreen-controls-hidden"></video>
     </div>
 </template>
 
@@ -11,19 +11,16 @@ import * as ZXing from '@zxing/library'
 
 export default {
     setup () {
-        const activateFullscreen = (el) => {
-            el.requestFullscreen()
-        }
+        const codeReader = ref(null)
+        const videoOptionId = ref(null)
+
+        const activateFullscreen = (el) => el.requestFullscreen()
 
         const onResult = (data) => {
             if (!data) return
             console.log(data)
             document.exitFullscreen()
         }
-
-        const codeReader = ref(null)
-        const videoOptionId = ref(null)
-        const refCameraResult = ref(null)
 
         const toggleScanner = () => {
             codeReader.value = new ZXing.BrowserMultiFormatReader()
@@ -34,12 +31,10 @@ export default {
                 console.log(videoInputDevices)
                 if (videoInputDevices.length == 0) return
 
+                // uses the back camera when possible, defaults to main one
                 const videoInput = videoInputDevices.find(input => input.label.includes('back')) || videoInputDevices[0]
 
                 videoOptionId.value = videoInput.deviceId
-
-                console.log(refCameraResult.value);
-
                 startDecoding();
             })
         }
@@ -51,15 +46,33 @@ export default {
                     console.log(result.toString().padStart(13,'0'))
                     codeReader.value.reset()
                 }
-                if (err && !(err instanceof ZXing.NotFoundException)) {
-                    console.error(err)
-                }
+                if (err && !(err instanceof ZXing.NotFoundException)) console.error(err)
             })
 
             console.log(`Started continous decode from camera on element => ${videoOptionId.value}`)
+            activateFullscreen(document.getElementById('video'))
         }
 
         return { onResult, toggleScanner, activateFullscreen }
     }
 }
 </script>
+
+<style>
+/* Hide controls when video is in fullscreen */
+video::-webkit-media-controls {
+    display: none !important;
+}
+video::-webkit-media-controls-enclosure {
+    display: none !important;
+}
+video::-webkit-media-controls-play-button {
+    display: none !important;
+}
+video::-webkit-media-controls-volume-slider {
+    display: none !important;
+}
+video::-webkit-media-controls-fullscreen-button {
+    display: none !important;
+}
+</style>

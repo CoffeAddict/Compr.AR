@@ -12,9 +12,6 @@
         {{ product.nombre }}
       </li>
     </ul>
-    <div ref="refCameraContainer">
-      <video ref="refCameraResult" id="video"></video>
-    </div>
   </div>
 </template>
 

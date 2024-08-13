@@ -1,5 +1,4 @@
 <template>
-  <SearchBar/>
   <h2>Pruebas</h2>
   <section>
     <h3>Buscar producto por nombre - Service Ready</h3>
@@ -8,7 +7,7 @@
     <h3>Buscar producto por codigo de barras - Service Ready</h3>
   </section>
   <section>
-    <h3>Leer codigo de barras - pendiente</h3>
+    <h3>Leer codigo de barras - Component Ready, needs optimization and error handling</h3>
     <BarcodeButton/>
   </section>
   <section>
@@ -34,7 +33,7 @@
 <script>
 import SearchBar from './components/SearchBar.vue'
 import BarcodeButton from './components/BarcodeButton.vue'
-import searchService from './services/searchService'
+import DBService from './services/dbService'
 
 export default {
   name: 'App',
@@ -43,9 +42,13 @@ export default {
     BarcodeButton
   },
   async mounted () {
-    // console.log(await searchService.getProductByCode(7799155000173))
-    // console.log(await searchService.getProductByName('celusal'))
-
+    DBService.addProduct({id: 1, name: 'Celusal'})
+    DBService.addProduct({id: 2, name: 'Celusal'})
+    DBService.addProduct({id: 3, name: 'Celusal'})
+    // DBService.deleteProduct(1)
+    DBService.getAll()
+    .then(resp => console.log(resp))
+    .catch(error => console.error(error))
   }
 }
 </script>
